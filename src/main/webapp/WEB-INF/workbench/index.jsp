@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
 <meta charset="UTF-8">
-<link href="../jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="../jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="../jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+<link href="/crm/jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="/crm/jquery/jquery-1.11.1-min.js"></script>
+<script type="text/javascript" src="/crm/jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 
 	//页面加载完毕
@@ -31,8 +31,8 @@
 			$(this).children("a").css("color","white");
 		});
 		
-		
-		window.open("main/index.html","workareaFrame");
+		//打开一个新窗口 ，以open的形式打开窗口，在右侧显示
+		window.open("/crm/toView/main/index","workareaFrame");
 		
 	});
 	
@@ -54,7 +54,7 @@
 				<div class="modal-body">
 					<div style="position: relative; left: 40px;">
 						姓名：<b>张三</b><br><br>
-						登录帐号：<b>zhangsan</b><br><br>
+						登录帐号：<b>${user.name}</b><br><br>
 						组织机构：<b>1005，市场部，二级部门</b><br><br>
 						邮箱：<b>zhangsan@bjpowernode.com</b><br><br>
 						失效时间：<b>2017-02-14 10:10:10</b><br><br>
@@ -138,7 +138,7 @@
 			<ul>
 				<li class="dropdown user-dropdown">
 					<a href="javascript:void(0)" style="text-decoration: none; color: white;" class="dropdown-toggle" data-toggle="dropdown">
-						<span class="glyphicon glyphicon-user"></span> zhangsan <span class="caret"></span>
+						<span class="glyphicon glyphicon-user"></span> ${sessionScope.user.name} <span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
 						<li><a href="../settings/index.html"><span class="glyphicon glyphicon-wrench"></span> 系统设置</a></li>

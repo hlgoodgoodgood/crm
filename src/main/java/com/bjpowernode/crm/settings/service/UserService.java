@@ -7,4 +7,6 @@ import java.util.List;
 public interface UserService {
 
     List<User> queryUsers();
+
+    User login(User user);
 }

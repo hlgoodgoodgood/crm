@@ -8,5 +8,8 @@
     <settings>
         <!-- 控制台打印sql语句 -->
         <setting name="logImpl" value="STDOUT_LOGGING"/>
+        <!--驼峰命名自动转换-->
+       <!-- <setting name= "mapUnderscoreToCamelCase" value= "true" />-->
     </settings>
+
 </configuration>
