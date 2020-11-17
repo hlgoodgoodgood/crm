@@ -11,6 +11,9 @@ import com.bjpowernode.crm.base.constants.CrmExceptionEnum;
  * @Version: 1.0
  * <p>
  * Copyright: Copyright (c) 2020
+ * 自定义异常:
+ *  1、可以给用户返回信息
+ *  2、项目上线出现Bug
  */
 public class CrmException extends RuntimeException {
 

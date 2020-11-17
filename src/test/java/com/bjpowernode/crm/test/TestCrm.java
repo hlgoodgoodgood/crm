@@ -5,7 +5,14 @@ import com.bjpowernode.crm.base.exception.CrmException;
 import com.bjpowernode.crm.base.util.DateTimeUtil;
 import com.bjpowernode.crm.base.util.MD5Util;
 import com.bjpowernode.crm.base.util.UUIDUtil;
+import com.bjpowernode.crm.workbench.mapper.ActivityMapper;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Test;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @ProjectName: crm
@@ -61,5 +68,16 @@ public class TestCrm {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    //测试查询所有市场活动信息数据
+    @Test
+    public void test05(){
+        BeanFactory beanFactory =
+                new ClassPathXmlApplicationContext("spring/applicationContext.xml");
+        SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) beanFactory.getBean("sqlSessionFactory");
+        ActivityMapper activityMapper = sqlSessionFactory.openSession().getMapper(ActivityMapper.class);
+        List<Map<String, String>> maps = activityMapper.queryAllActivity();
+        System.out.println(maps);
     }
 }
