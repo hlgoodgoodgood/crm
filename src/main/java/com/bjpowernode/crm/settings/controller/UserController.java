@@ -58,4 +58,12 @@ public class UserController {
         return "index";
     }
 
+    //退出系统
+    @RequestMapping("/settings/user/loginOut")
+    public String loginOut(HttpSession session){
+        //从session移除用户
+        session.removeAttribute(CrmConstants.LOGIN_USER);
+        return "redirect:/login.jsp";
+    }
+
 }

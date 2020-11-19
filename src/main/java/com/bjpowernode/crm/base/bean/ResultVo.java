@@ -12,24 +12,24 @@ package com.bjpowernode.crm.base.bean;
  */
 public class ResultVo {
 
-    private boolean isOk;
+    private boolean success;
 
     private String mess;
 
     @Override
     public String toString() {
         return "ResultVo{" +
-                "isOk=" + isOk +
+                "success=" + success +
                 ", mess='" + mess + '\'' +
                 '}';
     }
 
-    public boolean isOk() {
-        return isOk;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setOk(boolean ok) {
-        isOk = ok;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     public String getMess() {

@@ -14,5 +14,4 @@ public class CrmConstants {
 
     public static final String LOGIN_USER="user";
 
-    public static final int PAGE_SIZE=2;
 }

@@ -77,7 +77,7 @@ public class TestCrm {
                 new ClassPathXmlApplicationContext("spring/applicationContext.xml");
         SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) beanFactory.getBean("sqlSessionFactory");
         ActivityMapper activityMapper = sqlSessionFactory.openSession().getMapper(ActivityMapper.class);
-        List<Map<String, String>> maps = activityMapper.queryAllActivity();
+        List<Map<String, String>> maps = activityMapper.queryAllActivity(null);
         System.out.println(maps);
     }
 }
