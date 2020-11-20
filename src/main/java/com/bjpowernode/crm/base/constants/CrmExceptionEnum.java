@@ -18,7 +18,8 @@ public enum CrmExceptionEnum {
     ACTIVITY_UPDATE("002","修改市场活动失败"),
     ACTIVITY_DELETE("002","删除市场活动失败"),
     ACTIVITY_REMARK_UPDATE("002","更新市场活动备注失败"),
-    ACTIVITY_REMARK_DELETE("002","删除市场活动备注失败");
+    ACTIVITY_REMARK_DELETE("002","删除市场活动备注失败"),
+    ACTIVITY_REMARK_SAVE("002","添加市场活动备注失败");
 
     private String code;//业务状态码 001:用户登录 002:交易模块
 

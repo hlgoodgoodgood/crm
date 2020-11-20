@@ -34,4 +34,6 @@ public interface ActivityService {
     void updateActivityRemark(ActivityRemark activityRemark);
 
     void deleteActivityRemark(String id);
+
+    void saveActivityRemark(ActivityRemark activityRemark);
 }

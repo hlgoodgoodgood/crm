@@ -81,7 +81,22 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public void deleteActivity(String id) {
+        //删除市场活动
         int count =  activityMapper.deleteByPrimaryKey(id);
+        //删除市场活动下的对应的市场活动备注
+       /* 精准删除
+       ActivityRemark activityRemark = new ActivityRemark();
+        //只能精准删除 delete from tbl_activity_remark where activityId=?
+        //如果需要模糊匹配的话，只能用Example
+        activityRemark.setActivityId(id);
+        activityRemarkMapper.delete(activityRemark);*/
+
+       /*
+       Example删除
+        */
+       Example example = new Example(ActivityRemark.class);
+       example.createCriteria().andEqualTo("activityId",id);
+       activityRemarkMapper.deleteByExample(example);
         if(count == 0){
             throw new CrmException(CrmExceptionEnum.ACTIVITY_DELETE);
         }
@@ -114,6 +129,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public void updateActivityRemark(ActivityRemark activityRemark) {
         activityRemark.setEditTime(DateTimeUtil.getSysTime());
+        activityRemark.setEditFlag("1");
         int count =  activityRemarkMapper.updateByPrimaryKeySelective(activityRemark);
         if(count == 0){
             throw new CrmException(CrmExceptionEnum.ACTIVITY_REMARK_UPDATE);
@@ -126,5 +142,19 @@ public class ActivityServiceImpl implements ActivityService {
         if(count == 0){
             throw new CrmException(CrmExceptionEnum.ACTIVITY_REMARK_DELETE);
         }
+    }
+
+    @Override
+    public void saveActivityRemark(ActivityRemark activityRemark) {
+        //指定主键
+        activityRemark.setId(UUIDUtil.getUUID());
+        activityRemark.setCreateTime(DateTimeUtil.getSysTime());
+        activityRemark.setEditFlag("0");
+
+        int count =  activityRemarkMapper.insertSelective(activityRemark);
+        if(count == 0){
+            throw new CrmException(CrmExceptionEnum.ACTIVITY_REMARK_SAVE);
+        }
+
     }
 }

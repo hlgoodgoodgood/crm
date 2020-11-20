@@ -142,6 +142,18 @@ public class ActivityController {
         return resultVo;
     }
 
+    //根据主键删除市场活动
+    @RequestMapping("/workbench/activity/deleteActivityByDetail")
+    public String deleteActivityByDetail(String id){
+        try{
+            //删除成功
+            activityService.deleteActivity(id);
+        }catch (CrmException e){
+            e.printStackTrace();
+        }
+       return "redirect:/toView/activity/index";
+    }
+
     //根据主键查询市场活动
     @RequestMapping("/workbench/activity/queryActivityDetailById")
     public String queryActivityDetailById(String id, Model model){
@@ -159,7 +171,7 @@ public class ActivityController {
         try {
             activityService.updateActivityRemark(activityRemark);
             resultVo.setSuccess(true);
-            resultVo.setMess("修改备注成功");
+            resultVo.setMess("修改市场活动备注成功");
         }catch (CrmException e){
             resultVo.setSuccess(false);
             //将异常信息添加到resultVo中
@@ -168,7 +180,7 @@ public class ActivityController {
         return resultVo;
     }
 
-    //异步修改备注内容
+    //异步删除备注内容
     @RequestMapping("/workbench/activity/deleteActivityRemark")
     @ResponseBody
     public ResultVo deleteActivityRemark(String id){
@@ -177,7 +189,27 @@ public class ActivityController {
         try {
             activityService.deleteActivityRemark(id);
             resultVo.setSuccess(true);
-            resultVo.setMess("删除备注成功");
+            resultVo.setMess("删除市场活动备注成功");
+        }catch (CrmException e){
+            resultVo.setSuccess(false);
+            //将异常信息添加到resultVo中
+            resultVo.setMess(e.getMessage());
+        }
+        return resultVo;
+    }
+
+    //添加市场活动备注
+    @RequestMapping("/workbench/activity/saveActivityRemark")
+    @ResponseBody
+    public ResultVo saveActivityRemark(ActivityRemark activityRemark,HttpSession session){
+        ResultVo resultVo = new ResultVo();
+        try {
+            //获取创建人
+            User user = (User) session.getAttribute(CrmConstants.LOGIN_USER);
+            activityRemark.setCreateBy(user.getName());
+            activityService.saveActivityRemark(activityRemark);
+            resultVo.setSuccess(true);
+            resultVo.setMess("添加市场活动备注成功");
         }catch (CrmException e){
             resultVo.setSuccess(false);
             //将异常信息添加到resultVo中
