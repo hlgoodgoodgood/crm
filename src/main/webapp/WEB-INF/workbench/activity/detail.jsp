@@ -353,7 +353,6 @@
 				}
 			});
 
-
 		});
 
 		//点击删除按钮
@@ -361,7 +360,7 @@
 			var isDelete = confirm("确认删除当前市场活动吗");
 			if(isDelete){
 				//因为删除按钮就在市场活动详情页面，如果使用ajax删除之后会返回当前页面，而当前页面的已经被删除
-				//会导致删除成功后回到本页面会没有数据量
+				//会导致删除成功后回到本页面会没有数据
 				//采用传统请求 除了ajax之外都是传统请求
 				location.href = '/crm/workbench/activity/deleteActivityByDetail?id=${activity.id}';
 			}

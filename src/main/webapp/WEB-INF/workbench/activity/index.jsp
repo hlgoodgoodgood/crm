@@ -257,9 +257,12 @@
 			dataType : 'json',
 			success : function(data){
 				alert(data.mess);
+				$('#createActivityForm')[0].reset();
 				/*
 				modal函数:弹窗函数 show:显示 hide:隐藏
 				 */
+				//重置表单	reset:js对象 reset()
+
 				//隐藏模态窗口
 				$('#createActivityModal').modal('hide');
 
