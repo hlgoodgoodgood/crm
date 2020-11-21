@@ -380,10 +380,10 @@
 			<div class="remarkDiv" style="height: 60px;">
 				<img title="zhangsan" src="/crm//image/user-thumbnail.png" style="width: 30px; height:30px;">
 				<div style="position: relative; top: -40px; left: 40px;" >
-					<h5 id="clueNoteContentH5${clueRemark.id}">${clueRemark.noteContent}</h5>
+					<h5 id="${clueRemark.id}">${clueRemark.noteContent}</h5>
 					<font color="gray">线索</font> <font color="gray">-</font> <b>${clue.fullname}-${clue.company}</b> <small style="color: gray;"> ${clue.createTime} ${clue.createBy}</small>
 					<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
-						<a class="myHref" onclick="updateClue($('#clueNoteContentH5${clueRemark.id}').html(),'${clueRemark.id}')" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
+						<a class="myHref" onclick="updateClue($('#${clueRemark.id}').html(),'${clueRemark.id}')" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
 					</div>
@@ -480,26 +480,27 @@
 
 <script>
 
-	var id01 = "";
-
 	//点击线索备注的修改按钮，弹出修改线索的模态窗口
 	function updateClue(noteContent,id) {
 		//将页面遍历出来的备注内容设置到模态窗口中的备注文本域中
-		$('#clueNoteContent').html(noteContent);
+		$('#clueNoteContent').val(noteContent);
 		//将备注的主键放在模态窗口的隐藏域中
-		$('#clueRemarkId').val(id);
 		$('#updateClueModal').modal('show');
+		$('#clueRemarkId').val(id);
 	}
 
 	//点击更新备注按钮，异步提交信息
 	$('#updateClueRemarkBtn').click(function () {
+		//从隐藏窗口取值id  从模态窗中取用户输入的noteContent
+		var id = $('#clueRemarkId').val();
+		var noteContent = $('#clueNoteContent').val()
 		$.ajax({
 			url : '/crm/workbench/clue/updateClueRemark',
 			data : {
-				'id' : $('#clueRemarkId').val(),
-				'noteContent' : $('#clueNoteContent').val()
+				'id' : id,
+				'noteContent' :noteContent
 			},
-			type : 'get',
+			type : 'post',
 			dataType : 'json',
 			success : function(data){
 				alert(data.mess);
@@ -508,6 +509,8 @@
 				//alert($('#clueNoteContent').val());
 				//$("#clueNoteContentH5"+$('#clueRemarkId').val()).html($('#clueNoteContent').val());
 				//$("#clueNoteContentH5"+id01).html($('#clueNoteContent').val());
+				//clueNoteContentH5删掉就好了,我也不知道为啥
+				$("#"+id).html(noteContent)
 			}
 		});
 	});
