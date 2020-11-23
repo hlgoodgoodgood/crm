@@ -23,7 +23,10 @@ public enum CrmExceptionEnum {
 
     CLUE_SAVE("003","添加线索失败"),
     CLUE_REMARK_UPDATE("003","更新线索备注失败"),
-    CLUE_REMARK_SAVE("003","添加线索备注失败");
+    CLUE_REMARK_SAVE("003","添加线索备注失败"),
+    CLUE_ACTIVITY_UNBIND("003","线索和市场活动解绑失败"),
+    CLUE_ACTIVITY_BIND("003","线索和市场活动绑定失败"),
+    CLUE_CONVERT("003","线索转换失败");
 
     private String code;//业务状态码 001:用户登录 002:交易模块
 

@@ -31,22 +31,23 @@
 			$("#remarkDiv").css("height","90px");
 			cancelAndSaveBtnDefault = true;
 		});
-		
-		$(".remarkDiv").mouseover(function(){
+
+
+		//参数1:事件对象,参数2:被代理的元素的选择器,参数3:事件触发的函数
+		$('#father').on('mouseover','.remarkDiv',function () {
 			$(this).children("div").children("div").show();
 		});
-		
-		$(".remarkDiv").mouseout(function(){
+
+		$('#father').on('mouseout','.remarkDiv',function () {
 			$(this).children("div").children("div").hide();
 		});
-		
-		$(".myHref").mouseover(function(){
+		$('#father').on('mouseover','.myHref',function () {
 			$(this).children("span").css("color","red");
 		});
-		
-		$(".myHref").mouseout(function(){
+		$('#father').on('mouseout','.myHref',function () {
 			$(this).children("span").css("color","#E6E6E6");
 		});
+
 	});
 	
 </script>
@@ -68,7 +69,7 @@
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+						    <input type="text" class="form-control" style="width: 300px;" id="activityName" placeholder="请输入市场活动名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -84,27 +85,21 @@
 								<td></td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
+						<tbody id="clueActivityBody">
+						<%--	<tr>
 								<td><input type="checkbox"/></td>
 								<td>发传单</td>
 								<td>2020-10-10</td>
 								<td>2020-10-20</td>
 								<td>zhangsan</td>
 							</tr>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
+							--%>
 						</tbody>
 					</table>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+					<button type="button" onclick="saveBindFun()" class="btn btn-primary">关联</button>
 				</div>
 			</div>
 		</div>
@@ -277,7 +272,9 @@
 			<h3>${clue.fullname} <small>${clue.company}</small></h3>
 		</div>
 		<div style="position: relative; height: 50px; width: 500px;  top: -72px; left: 700px;">
-			<button type="button" class="btn btn-default" onclick="window.location.href='convert.html';"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
+			<a type="button" class="btn btn-default"
+			   href="/crm/workbench/clue/toConvertView?id=${clue.id}">
+				<span class="glyphicon glyphicon-retweet"></span> 转换</a>
 			<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editClueModal"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
 			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
@@ -370,20 +367,19 @@
 	</div>
 	
 	<!-- 备注 -->
-	<div style="position: relative; top: 40px; left: 40px;">
+	<div id="father" style="position: relative; top: 40px; left: 40px;">
 		<div class="page-header">
 			<h4>备注</h4>
 		</div>
-
 
 		<c:forEach items="${clue.clueRemarks}" var="clueRemark">
 			<div class="remarkDiv" style="height: 60px;">
 				<img title="zhangsan" src="/crm//image/user-thumbnail.png" style="width: 30px; height:30px;">
 				<div style="position: relative; top: -40px; left: 40px;" >
-					<h5 id="${clueRemark.id}">${clueRemark.noteContent}</h5>
+					<h5 id="clueNoteContentH5${clueRemark.id}">${clueRemark.noteContent}</h5>
 					<font color="gray">线索</font> <font color="gray">-</font> <b>${clue.fullname}-${clue.company}</b> <small style="color: gray;"> ${clue.createTime} ${clue.createBy}</small>
 					<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
-						<a class="myHref" onclick="updateClue($('#${clueRemark.id}').html(),'${clueRemark.id}')" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
+						<a class="myHref" onclick="updateClue($('#clueNoteContentH5${clueRemark.id}').html(),'${clueRemark.id}')" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
 					</div>
@@ -414,21 +410,26 @@
 				<table class="table table-hover" style="width: 900px;">
 					<thead>
 						<tr style="color: #B3B3B3;">
+
+							<td><input type="checkbox" /> </td>
 							<td>名称</td>
 							<td>开始日期</td>
 							<td>结束日期</td>
 							<td>所有者</td>
-							<td></td>
+							<td>
+								<button class="btn btn-danger" onclick="deleteManyBind()">解除多个绑定</button>
+							</td>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="clueActivities">
 					  <c:forEach items="${clue.activities}" var="activity">
 						  <tr>
+							  <td><input type="checkbox" class="son" id="tr${activity.id}" value="${activity.id}" /> </td>
 							  <td>${activity.name}</td>
 							  <td>${activity.startDate}</td>
 							  <td>${activity.endDate}</td>
 							  <td>${activity.owner}</td>
-							  <td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
+							  <td><a onclick="unbind('${clue.id}','${activity.id}',$(this))" href="javascript:void(0)"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
 						  </tr>
 
 					  </c:forEach>
@@ -480,37 +481,35 @@
 
 <script>
 
+	var id01 = "";
+
 	//点击线索备注的修改按钮，弹出修改线索的模态窗口
 	function updateClue(noteContent,id) {
-		//将页面遍历出来的备注内容设置到模态窗口中的备注文本域中
-		$('#clueNoteContent').val(noteContent);
+		//将页面遍历出来的备注内容设置到模态窗口中的备注文本域中  ***
+		$('#clueNoteContent').val($("#clueNoteContentH5"+id).html());
 		//将备注的主键放在模态窗口的隐藏域中
-		$('#updateClueModal').modal('show');
 		$('#clueRemarkId').val(id);
+		$('#updateClueModal').modal('show');
 	}
 
 	//点击更新备注按钮，异步提交信息
 	$('#updateClueRemarkBtn').click(function () {
-		//从隐藏窗口取值id  从模态窗中取用户输入的noteContent
-		var id = $('#clueRemarkId').val();
-		var noteContent = $('#clueNoteContent').val()
 		$.ajax({
 			url : '/crm/workbench/clue/updateClueRemark',
 			data : {
-				'id' : id,
-				'noteContent' :noteContent
+				'id' : $('#clueRemarkId').val(),
+				'noteContent' : $('#clueNoteContent').val()
 			},
-			type : 'post',
+			type : 'get',
 			dataType : 'json',
 			success : function(data){
 				alert(data.mess);
 				$('#updateClueModal').modal('hide');
 				//将用户在模态窗口中输入的修改内容替换原先遍历出来对应的备注记录
 				//alert($('#clueNoteContent').val());
-				//$("#clueNoteContentH5"+$('#clueRemarkId').val()).html($('#clueNoteContent').val());
+				$("#clueNoteContentH5"+$('#clueRemarkId').val()).html($('#clueNoteContent').val());
 				//$("#clueNoteContentH5"+id01).html($('#clueNoteContent').val());
-				//clueNoteContentH5删掉就好了,我也不知道为啥
-				$("#"+id).html(noteContent)
+				// $('#'+$('#clueRemarkId').val()).html($('#clueNoteContent').val());
 			}
 		});
 	});
@@ -542,9 +541,154 @@
 						"</div>\n" +
 						"</div>\n" +
 						"</div>");
+				/*
+				* 因为js只会被加载一次，页面元素都可以解析到js，但是添加备注是在加载js之后才生成的，找不到
+				* 只被解析一次的原先的js
+				* 1、在动态添加备注dom元素的时候再次绑定原先js事件即可
+				* 2、前提:事件的冒泡
+				*
+				* 把事件委托给其父元素[不是动态生成的父元素]，如果其直接父元素也是动态生成，还要继续往上级
+				* 找，直到找到不是动态生成的父元素即可，此时把动态生成的dom元素的事件委托给找到的父元素进行
+				* 管理
+				*
+				* */
+
 				$('#remark').val("");
 
 			}
 		});
 	});
+
+	//点击解除绑定按钮，解除线索和市场活动关系
+	function unbind(clueId,activityId,$this) {
+			$.ajax({
+				url : '/crm/workbench/clue/deleteBind',
+				data : {
+					'clueId' :clueId,
+					'activityId':activityId
+				},
+				type : 'get',
+				dataType : 'json',
+				success : function(data){
+					if(data.success){
+						alert(data.mess);
+						//删除解除绑定的dom元素(页面的tr)
+						$this.parent().parent().remove();
+					}
+				}
+			});
+	}
+	//点击解除多个绑定
+	function deleteManyBind() {
+		//获取勾中的记录
+		var activityIds = [];
+		$('.son').each(function () {
+			if($(this).prop('checked')){
+				activityIds.push($(this).val());
+			}
+		});
+		$.ajax({
+			url : '/crm/workbench/clue/deleteManyBind',
+			data : {
+				'clueId' :'${clue.id}',
+				'activityIds':activityIds.join()
+			},
+			type : 'get',
+			dataType : 'json',
+			success : function(data){
+				if(data.success){
+					alert(data.mess);
+					for(var i = 0 ; i < activityIds.length;i++){
+
+						//删除解除绑定的dom元素(页面的tr)
+						$('#tr'+activityIds[i]).parent().parent().remove();
+					}
+				}
+			}
+		});
+	}
+
+	//弹出关联市场活动模态窗口，在输入框中输入内容后，触发键盘事件
+	//注意:对于模态窗口，如果按下回车键，模态窗口会默认刷新当前页面
+	$('#activityName').keypress(function (event) {
+		//按下回车键发送异步请求
+		if(event.keyCode == 13){
+			$.ajax({
+				url : '/crm/workbench/clue/queryActivityExculdeNow',
+				data : {
+					'clueId' :'${clue.id}',
+					'activityName' : $(this).val()
+				},
+				type : 'get',
+				dataType : 'json',
+				success : function(data){
+					//情况内容
+					$('#clueActivityBody').html("");
+					for (var i = 0; i < data.length; i++) {
+						$('#clueActivityBody').
+						append("<tr>\n" +
+								"\t\t\t\t\t\t\t\t<td><input type=\"checkbox\" class='son1' value="+data[i].id+" /></td>\n" +
+								"\t\t\t\t\t\t\t\t<td>"+data[i].name+"</td>\n" +
+								"\t\t\t\t\t\t\t\t<td>"+data[i].startDate+"</td>\n" +
+								"\t\t\t\t\t\t\t\t<td>"+data[i].endDate+"</td>\n" +
+								"\t\t\t\t\t\t\t\t<td>"+data[i].owner+"</td>\n" +
+								"\t\t\t\t\t\t\t</tr>");
+					}
+				}
+			});
+
+		}
+		return false;
+	});
+	
+	//关联线索和市场活动
+	function saveBindFun() {
+		var activityIds = [];
+		$('.son1').each(function () {
+			if($(this).prop('checked')){
+				activityIds.push($(this).val());
+			}
+		});
+		$.ajax({
+			url : '/crm/workbench/clue/saveBind',
+			data : {
+				'clueId' :'${clue.id}',
+				'activityIds':activityIds.join()
+			},
+			type : 'get',
+			dataType : 'json',
+			success : function(data){
+				if(data.success){
+					alert(data.mess);
+					//隐藏模态窗口
+					$('#bundModal').modal('hide');
+					//异步查询当前线索关联的所有市场活动
+					$.ajax({
+						url : '/crm/workbench/clue/queryClueActivity',
+						data : {
+							'clueId' :'${clue.id}'
+						},
+						type : 'get',
+						dataType : 'json',
+						success : function(data){
+							//动态拼接当前线索的市场活动
+							$('#clueActivities').html("");
+							for(var i = 0 ; i < data.length; i++){
+
+								$('#clueActivities').
+								append("<tr>\n" +
+										"\t\t\t\t\t\t\t\t\t<td><input type=\"checkbox\" class=\"son\" id=\"tr"+data[i].id+"\" value=\""+data[i].id+"\" /> </td>\n" +
+										"\t\t\t\t\t\t\t\t\t<td>"+data[i].name+"</td>\n" +
+										"\t\t\t\t\t\t\t\t\t<td>"+data[i].startDate+"</td>\n" +
+										"\t\t\t\t\t\t\t\t\t<td>"+data[i].endDate+"</td>\n" +
+										"\t\t\t\t\t\t\t\t\t<td>"+data[i].owner+"</td>\n" +
+										"\t\t\t\t\t\t\t\t\t<td><a onclick=\"unbind('${clue.id}',"+data[i].id+","+$(this)+")\" href=\"javascript:void(0)\"  style=\"text-decoration: none;\"><span class=\"glyphicon glyphicon-remove\"></span>解除关联</a></td>\n" +
+										"\t\t\t\t\t\t\t</tr>");
+							}
+						}
+					});
+				}
+			}
+		});
+	}
 </script>

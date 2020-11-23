@@ -4,7 +4,9 @@ import com.bjpowernode.crm.base.bean.ResultVo;
 import com.bjpowernode.crm.base.constants.CrmConstants;
 import com.bjpowernode.crm.base.exception.CrmException;
 import com.bjpowernode.crm.settings.bean.User;
+import com.bjpowernode.crm.workbench.bean.Activity;
 import com.bjpowernode.crm.workbench.bean.Clue;
+import com.bjpowernode.crm.workbench.bean.ClueActivityRelation;
 import com.bjpowernode.crm.workbench.bean.ClueRemark;
 import com.bjpowernode.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @ProjectName: crm
@@ -97,5 +100,88 @@ public class ClueController {
         }
 
         return resultVo;
+    }
+
+    //解除线索和市场活动的关联
+    @RequestMapping("/workbench/clue/deleteBind")
+    @ResponseBody
+    public ResultVo deleteBind(ClueActivityRelation clueActivityRelation){
+        ResultVo resultVo = new ResultVo();
+        try{
+            clueService.deleteBind(clueActivityRelation);
+            resultVo.setSuccess(true);
+            resultVo.setMess("线索和市场活动解绑成功");
+        }catch (CrmException e){
+            resultVo.setSuccess(false);
+            resultVo.setMess(e.getMessage());
+        }
+
+        return resultVo;
+    }
+
+    //解除多个线索和市场活动的关联
+    @RequestMapping("/workbench/clue/deleteManyBind")
+    @ResponseBody
+    public ResultVo deleteManyBind(String clueId,String activityIds){
+        ResultVo resultVo = new ResultVo();
+        try{
+            clueService.deleteManyBind(clueId,activityIds);
+            resultVo.setSuccess(true);
+            resultVo.setMess("线索和市场活动解绑成功");
+        }catch (CrmException e){
+            resultVo.setSuccess(false);
+            resultVo.setMess(e.getMessage());
+        }
+
+        return resultVo;
+    }
+
+    //查询所有市场活动，但是不包含当前线索的市场活动
+    @RequestMapping("/workbench/clue/queryActivityExculdeNow")
+    @ResponseBody
+    public List<Activity> queryActivityExculdeNow(String clueId,String activityName){
+        List<Activity> activities = clueService.queryActivityExculdeNow(clueId,activityName);
+        return activities;
+    }
+
+    //保存线索和市场活动的关联
+    @RequestMapping("/workbench/clue/saveBind")
+    @ResponseBody
+    public ResultVo saveBind(String clueId,String activityIds){
+        ResultVo resultVo = new ResultVo();
+        try{
+            clueService.saveBind(clueId,activityIds);
+            resultVo.setSuccess(true);
+            resultVo.setMess("线索和市场活动绑定成功");
+        }catch (CrmException e){
+            resultVo.setSuccess(false);
+            resultVo.setMess(e.getMessage());
+        }
+
+        return resultVo;
+    }
+
+    //线索和市场活动关联成功后，再异步查询关联后的所有市场活动
+    @RequestMapping("/workbench/clue/queryClueActivity")
+    @ResponseBody
+    public List<Activity> queryClueActivity(String clueId){
+        List<Activity> activities = clueService.queryClueActivity(clueId);
+        return activities;
+    }
+
+    //跳转到线索转换页面
+    @RequestMapping("/workbench/clue/toConvertView")
+    public String toConvertView(String id,Model model){
+        Clue clue = clueService.queryClueDetailById(id);
+        model.addAttribute("clue",clue);
+        return "/clue/convert";
+    }
+
+    //转换
+    @RequestMapping("/workbench/clue/convert")
+    public String convert(String id,HttpSession session){
+        User user = (User) session.getAttribute(CrmConstants.LOGIN_USER);
+        clueService.convert(id,user.getName());
+        return "";
     }
 }

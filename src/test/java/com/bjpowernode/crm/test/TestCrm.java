@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -79,5 +81,17 @@ public class TestCrm {
         ActivityMapper activityMapper = sqlSessionFactory.openSession().getMapper(ActivityMapper.class);
         List<Map<String, String>> maps = activityMapper.queryAllActivity(null);
         System.out.println(maps);
+    }
+
+    //回顾Iterable接口
+    @Test
+    public void test06(){
+        List<String> ids = new ArrayList<>();
+        ids.add("1");
+        ids.add("2");
+        ids.add("3");
+        Iterable<String> iterator = ids;
+        System.out.println(iterator);
+
     }
 }
