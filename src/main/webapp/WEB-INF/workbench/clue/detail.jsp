@@ -508,7 +508,7 @@
 				//alert($('#clueNoteContent').val());
 				//$("#clueNoteContentH5"+$('#clueRemarkId').val()).html($('#clueNoteContent').val());
 				//$("#clueNoteContentH5"+id01).html($('#clueNoteContent').val());
-				//clueNoteContentH5删掉就好了,我也不知道为啥
+
 				$("#"+id).html(noteContent)
 			}
 		});
