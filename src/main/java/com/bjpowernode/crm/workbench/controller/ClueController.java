@@ -4,10 +4,7 @@ import com.bjpowernode.crm.base.bean.ResultVo;
 import com.bjpowernode.crm.base.constants.CrmConstants;
 import com.bjpowernode.crm.base.exception.CrmException;
 import com.bjpowernode.crm.settings.bean.User;
-import com.bjpowernode.crm.workbench.bean.Activity;
-import com.bjpowernode.crm.workbench.bean.Clue;
-import com.bjpowernode.crm.workbench.bean.ClueActivityRelation;
-import com.bjpowernode.crm.workbench.bean.ClueRemark;
+import com.bjpowernode.crm.workbench.bean.*;
 import com.bjpowernode.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -83,7 +80,6 @@ public class ClueController {
     }
 
     //添加线索备注
-
     @RequestMapping("/workbench/clue/saveClueRemark")
     @ResponseBody
     public ResultVo saveClueRemark(ClueRemark clueRemark,HttpSession session){
@@ -144,6 +140,14 @@ public class ClueController {
         return activities;
     }
 
+    //线索转换发生交易查询当前线索下的所有市场活动
+    @RequestMapping("/workbench/clue/queryActivityIncludeNow")
+    @ResponseBody
+    public List<Activity> queryActivityIncludeNow(String clueId,String activityName){
+        List<Activity> activities = clueService.queryActivityIncludeNow(clueId,activityName);
+        return activities;
+    }
+
     //保存线索和市场活动的关联
     @RequestMapping("/workbench/clue/saveBind")
     @ResponseBody
@@ -179,9 +183,14 @@ public class ClueController {
 
     //转换
     @RequestMapping("/workbench/clue/convert")
-    public String convert(String id,HttpSession session){
+    /*
+    * transaction:用于接收创建交易的表单
+    * clueId:线索id
+    * isCreateTransaction:是否进行交易
+    * */
+    public String convert(Transaction transaction, String clueId, HttpSession session, String isCreateTransaction){
         User user = (User) session.getAttribute(CrmConstants.LOGIN_USER);
-        clueService.convert(id,user.getName());
-        return "";
+        clueService.saveConvert(transaction,clueId,user.getName(),isCreateTransaction);
+        return "redirect:/toView/clue/index";
     }
 }

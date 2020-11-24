@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
-import java.util.List;
+import java.util.*;
 
 /**
  * @ProjectName: crm
@@ -34,11 +34,27 @@ public class CrmCache {
     @PostConstruct
     public void cache(){
 
+        //数据字典数据缓冲
         List<DictionaryType> dictionaryTypes = dictionaryService.queryDictionary();
 
         //将dictionaryTypes放入到ServletContext中
         servletContext.setAttribute("dictionaryTypes",dictionaryTypes);
 
+        //读取Stage2Possibility.properties    包名.属性文件(扩展名不能要)
+        ResourceBundle resourceBundle =
+                ResourceBundle.getBundle("mybatis.Stage2Possibility");
+        //获取所有key
+        Enumeration<String> keys = resourceBundle.getKeys();
+        //把所有阶段和可能性的数据放在map中
+        Map<String,String> map = new HashMap<>();
+        while (keys.hasMoreElements()){
+            String key = keys.nextElement();//取出本次循环的数据
+            String value = resourceBundle.getString(key);
+            map.put(key,value);
+        }
+        //将map放在servletContext中
+
+        servletContext.setAttribute("stage2PossibilityMap",map);
     }
 
 

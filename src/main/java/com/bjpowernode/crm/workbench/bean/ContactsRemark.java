@@ -11,14 +11,14 @@ import javax.persistence.Table;
  * @Package: com.bjpowernode.crm.workbench.bean
  * @Description: java类作用描述
  * @Author: Andy
- * @CreateDate: 2020/11/23 16:03
+ * @CreateDate: 2020/11/24 9:59
  * @Version: 1.0
  * <p>
  * Copyright: Copyright (c) 2020
  */
-@Table(name = "tbl_customer_remark")
+@Table(name = "tbl_contacts_remark")
 @NameStyle(Style.normal)
-public class CustomerRemark {
+public class ContactsRemark {
 
     @Id
     private String id;
@@ -28,11 +28,11 @@ public class CustomerRemark {
     private String editBy;
     private String editTime;
     private String editFlag;
-    private String customerId;
+    private String contactsId;
 
     @Override
     public String toString() {
-        return "CustomerRemark{" +
+        return "ContactsRemark{" +
                 "id='" + id + '\'' +
                 ", noteContent='" + noteContent + '\'' +
                 ", createBy='" + createBy + '\'' +
@@ -40,7 +40,7 @@ public class CustomerRemark {
                 ", editBy='" + editBy + '\'' +
                 ", editTime='" + editTime + '\'' +
                 ", editFlag='" + editFlag + '\'' +
-                ", customerId='" + customerId + '\'' +
+                ", contactsId='" + contactsId + '\'' +
                 '}';
     }
 
@@ -100,11 +100,11 @@ public class CustomerRemark {
         this.editFlag = editFlag;
     }
 
-    public String getCustomerId() {
-        return customerId;
+    public String getContactsId() {
+        return contactsId;
     }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setContactsId(String contactsId) {
+        this.contactsId = contactsId;
     }
 }

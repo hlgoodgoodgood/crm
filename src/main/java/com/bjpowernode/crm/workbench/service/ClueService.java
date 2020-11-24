@@ -1,9 +1,6 @@
 package com.bjpowernode.crm.workbench.service;
 
-import com.bjpowernode.crm.workbench.bean.Activity;
-import com.bjpowernode.crm.workbench.bean.Clue;
-import com.bjpowernode.crm.workbench.bean.ClueActivityRelation;
-import com.bjpowernode.crm.workbench.bean.ClueRemark;
+import com.bjpowernode.crm.workbench.bean.*;
 
 import java.util.List;
 
@@ -26,5 +23,7 @@ public interface ClueService {
 
     List<Activity> queryClueActivity(String clueId);
 
-    void convert(String id,String username);
+    void saveConvert(Transaction transaction,String clueId, String username, String isCreateTransaction);
+
+    List<Activity> queryActivityIncludeNow(String clueId, String activityName);
 }

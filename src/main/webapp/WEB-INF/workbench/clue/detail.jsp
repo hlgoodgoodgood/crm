@@ -4,9 +4,9 @@
 <head>
 <meta charset="UTF-8">
 
-<link href="/crm//jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="/crm//jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="/crm//jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+<link href="/crm/jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="/crm/jquery/jquery-1.11.1-min.js"></script>
+<script type="text/javascript" src="/crm/jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
 
@@ -481,7 +481,6 @@
 
 <script>
 
-	var id01 = "";
 
 	//点击线索备注的修改按钮，弹出修改线索的模态窗口
 	function updateClue(noteContent,id) {

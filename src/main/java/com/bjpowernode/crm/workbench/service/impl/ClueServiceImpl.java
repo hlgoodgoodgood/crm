@@ -48,6 +48,27 @@ public class ClueServiceImpl implements ClueService {
     @Autowired
     private CustomerMapper customerMapper;
 
+    @Autowired
+    private ContactsMapper contactsMapper;
+
+    @Autowired
+    private CustomerRemarkMapper customerRemarkMapper;
+
+    @Autowired
+    private ContactsRemarkMapper contactsRemarkMapper;
+
+    @Autowired
+    private ContactsActivityRelationMapper contactsActivityRelationMapper;
+
+    @Autowired
+    private TransactionMapper transactionMapper;
+
+    @Autowired
+    private TransactionHistoryMapper transactionHistoryMapper;
+
+    @Autowired
+    private TransactionRemarkMapper transactionRemarkMapper;
+
     @Override
     public void saveClue(Clue clue) {
         clue.setId(UUIDUtil.getUUID());
@@ -218,7 +239,7 @@ public class ClueServiceImpl implements ClueService {
     }
 
     @Override
-    public void convert(String id,String username) {
+    public void saveConvert(Transaction transaction,String id,String username,String isCreateTransaction) {
         //1、根据线索的主键查询线索的信息(线索包含自身的信息，包含客户的信息，包含联系人信息)
         Clue clue = clueMapper.selectByPrimaryKey(id);
 
@@ -228,11 +249,13 @@ public class ClueServiceImpl implements ClueService {
          */
         Example example = new Example(Customer.class);
         example.createCriteria().andEqualTo("name",clue.getCompany());
-        int count = customerMapper.selectCountByExample(example);
+        List<Customer> customers = customerMapper.selectByExample(example);
 
-        if(count == 0){
+        //将线索中的客户信息取出来保存在客户表中
+        Customer customer = null;
+        if(customers.size() == 0){
            //客户不存在，创建一个新客户
-            Customer customer = new Customer();
+            customer = new Customer();
             //从线索中取出客户信息
             customer.setId(UUIDUtil.getUUID());
             customer.setAddress(clue.getAddress());
@@ -244,12 +267,179 @@ public class ClueServiceImpl implements ClueService {
             customer.setNextContactTime(clue.getNextContactTime());
             customer.setPhone(clue.getPhone());
             customer.setWebsite(clue.getWebsite());
+
+            customer.setOwner(clue.getOwner());
             //保存客户信息
             int result = customerMapper.insertSelective(customer);
             if(result == 0){
                 throw new CrmException(CrmExceptionEnum.CLUE_CONVERT);
             }
+        }else{
+            customer = customers.get(0);
         }
 
+        //将线索中的联系人信息提取出来保存在联系人表中
+        Contacts contacts = new Contacts();
+        contacts.setId(UUIDUtil.getUUID());
+        contacts.setAppellation(clue.getAppellation());
+        contacts.setCreateBy(username);
+        contacts.setCreateTime(DateTimeUtil.getSysTime());
+        contacts.setCustomerId(customer.getId());
+        contacts.setEmail(clue.getEmail());
+        contacts.setFullname(clue.getFullname());
+        contacts.setJob(clue.getJob());
+        contacts.setMphone(clue.getMphone());
+        contacts.setOwner(clue.getOwner());
+        contacts.setNextContactTime(clue.getNextContactTime());
+        contacts.setSource(clue.getSource());
+
+        int count = contactsMapper.insertSelective(contacts);
+        if(count == 0){
+            throw new CrmException(CrmExceptionEnum.CLUE_CONVERT);
+        }
+
+        //线索中的备注信息取出来保存在客户备注和联系人备注中
+        //根据线索id查询当前线索的所有备注
+        example = new Example(ClueRemark.class);
+        example.createCriteria().andEqualTo("clueId",clue.getId());
+        List<ClueRemark> clueRemarks = clueRemarkMapper.selectByExample(example);
+
+        for (ClueRemark clueRemark : clueRemarks) {
+            //客户备注信息
+            CustomerRemark customerRemark = new CustomerRemark();
+            customerRemark.setId(UUIDUtil.getUUID());
+            customerRemark.setNoteContent(clueRemark.getNoteContent());
+            customerRemark.setCreateBy(username);
+            customerRemark.setCreateTime(clueRemark.getCreateTime());
+            customerRemark.setCustomerId(customer.getId());
+            count = customerRemarkMapper.insertSelective(customerRemark);
+            if(count == 0){
+                throw new CrmException(CrmExceptionEnum.CLUE_CONVERT);
+            }
+
+            //联系人备注信息
+            ContactsRemark contactsRemark = new ContactsRemark();
+            contactsRemark.setId(UUIDUtil.getUUID());
+            contactsRemark.setNoteContent(clueRemark.getNoteContent());
+            contactsRemark.setCreateBy(username);
+            contactsRemark.setCreateTime(clueRemark.getCreateTime());
+            contactsRemark.setContactsId(contacts.getId());
+            count = contactsRemarkMapper.insertSelective(contactsRemark);
+            if(count == 0){
+                throw new CrmException(CrmExceptionEnum.CLUE_CONVERT);
+            }
+        }
+
+        //将"线索和市场活动的关系"转换到"联系人和市场活动的关系中"
+        //先将当前线索对应的市场活动的id号查询出来
+        example = new Example(ClueActivityRelation.class);
+        example.createCriteria().andEqualTo("clueId",clue.getId());
+        List<ClueActivityRelation> clueActivityRelations = clueActivityRelationMapper.selectByExample(example);
+
+        for (ClueActivityRelation clueActivityRelation : clueActivityRelations) {
+            ContactsActivityRelation contactsActivityRelation = new ContactsActivityRelation();
+            contactsActivityRelation.setId(UUIDUtil.getUUID());
+            contactsActivityRelation.setContactsId(contacts.getId());
+            contactsActivityRelation.setActivityId(clueActivityRelation.getActivityId());
+            count = contactsActivityRelationMapper.insertSelective(contactsActivityRelation);
+            if(count == 0){
+                throw new CrmException(CrmExceptionEnum.CLUE_CONVERT);
+            }
+        }
+
+        /**
+         * 如果转换过程中发生了交易，创建一条新的交易，交易信息不全，后面可以通过修改交易来完善交易信息
+         */
+        if("1".equals(isCreateTransaction)){
+            //发生了交易
+             transaction.setId(UUIDUtil.getUUID());
+            transaction.setCustomerId(customer.getId());
+             transaction.setContactsId(contacts.getId());
+             transaction.setCreateBy(username);
+             transaction.setCreateTime(clue.getCreateTime());
+             transaction.setOwner(clue.getOwner());
+             transaction.setSource(clue.getSource());
+             count =transactionMapper.insertSelective(transaction);
+            if(count == 0){
+                throw new CrmException(CrmExceptionEnum.CLUE_CONVERT);
+            }
+            //创建该条交易对应的交易历史以及备注   交易-->交易历史 1-n
+            //交易历史
+            TransactionHistory transactionHistory = new TransactionHistory();
+            transactionHistory.setId(UUIDUtil.getUUID());
+            transactionHistory.setCreateBy(username);
+            transactionHistory.setCreateTime(transaction.getCreateTime());
+            transactionHistory.setExpectedDate(transaction.getExpectedDate());
+            transactionHistory.setMoney(transaction.getMoney());
+            transactionHistory.setStage(transaction.getStage());
+            transactionHistory.setTranId(transaction.getId());
+            count = transactionHistoryMapper.insertSelective(transactionHistory);
+            if(count == 0){
+                throw new CrmException(CrmExceptionEnum.CLUE_CONVERT);
+            }
+            //交易备注
+            TransactionRemark transactionRemark = new TransactionRemark();
+            transactionRemark.setId(UUIDUtil.getUUID());
+            transactionRemark.setCreateBy(transaction.getCreateBy());
+            transactionRemark.setCreateTime(transaction.getCreateTime());
+            transactionRemark.setTranId(transaction.getId());
+            transactionRemark.setEditFlag("0");
+            count = transactionRemarkMapper.insertSelective(transactionRemark);
+            if(count == 0){
+                throw new CrmException(CrmExceptionEnum.CLUE_CONVERT);
+            }
+        }
+
+        //删除线索的备注信息
+        example = new Example(ClueRemark.class);
+        example.createCriteria().andEqualTo("clueId",clue.getId());
+        count = clueRemarkMapper.deleteByExample(example);
+        if(count == 0){
+            throw new CrmException(CrmExceptionEnum.CLUE_CONVERT);
+        }
+        //删除线索和市场活动的关联关系
+        example = new Example(ClueActivityRelation.class);
+        example.createCriteria().andEqualTo("clueId",clue.getId());
+        count = clueActivityRelationMapper.deleteByExample(example);
+        if(count == 0){
+            throw new CrmException(CrmExceptionEnum.CLUE_CONVERT);
+        }
+
+        //删除线索
+        clueMapper.deleteByPrimaryKey(clue.getId());
+    }
+
+    //线索转换发生交易查询当前线索下的所有市场活动
+    @Override
+    public List<Activity> queryActivityIncludeNow(String clueId, String activityName) {
+        //查询出该线索下的关联的市场活动id
+        ClueActivityRelation clueActivityRelation = new ClueActivityRelation();
+        clueActivityRelation.setClueId(clueId);
+        List<ClueActivityRelation> clueActivityRelations = clueActivityRelationMapper.select(clueActivityRelation);
+        //将clueActivityRelations集合中每个ClueActivityRelation中的activityId号取出来放入到集合中
+        List<String> activityIds = new ArrayList<>();
+        for (ClueActivityRelation activityRelation : clueActivityRelations) {
+            activityIds.add(activityRelation.getActivityId());
+        }
+
+        //查询集合中的所有市场活动
+        Example example = new Example(Activity.class);
+        Example.Criteria criteria = example.createCriteria();
+        if(activityName != null && activityName != ""){
+            //有查询条件
+            criteria.andLike("name","%" + activityName + "%")
+                    .andIn("id",activityIds);
+        }else{
+            //查询条件为空，查询所有
+            criteria.andIn("id",activityIds);
+        }
+        List<Activity> activities = activityMapper.selectByExample(example);
+        //查询用户表，将用户姓名放置到activity的owner
+        for (Activity activity : activities) {
+            User user = userMapper.selectByPrimaryKey(activity.getOwner());
+
+            activity.setOwner(user.getName());
+        }
+        return activities;
     }
 }

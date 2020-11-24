@@ -1,15 +1,17 @@
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
 <meta charset="UTF-8">
 
-<link href="../../jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-<link href="../../jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
+<link href="/crm/jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+<link href="/crm/jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
 
-<script type="text/javascript" src="../../jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
-<script type="text/javascript" src="../../jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+<script type="text/javascript" src="/crm/jquery/jquery-1.11.1-min.js"></script>
+<script type="text/javascript" src="/crm/jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/crm/jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="/crm/jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+<script type="text/javascript" src="/crm/jquery/bs_typeahead/bootstrap3-typeahead.min.js"></script>
 
 </head>
 <body>
@@ -127,9 +129,7 @@
 			<label for="create-transactionOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
 				<select class="form-control" id="create-transactionOwner">
-				  <option>zhangsan</option>
-				  <option>lisi</option>
-				  <option>wangwu</option>
+
 				</select>
 			</div>
 			<label for="create-amountOfMoney" class="col-sm-2 control-label">金额</label>
@@ -157,16 +157,15 @@
 			<label for="create-transactionStage" class="col-sm-2 control-label">阶段<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
 			  <select class="form-control" id="create-transactionStage">
-			  	<option></option>
-			  	<option>资质审查</option>
-			  	<option>需求分析</option>
-			  	<option>价值建议</option>
-			  	<option>确定决策者</option>
-			  	<option>提案/报价</option>
-			  	<option>谈判/复审</option>
-			  	<option>成交</option>
-			  	<option>丢失的线索</option>
-			  	<option>因竞争丢失关闭</option>
+				  <c:forEach items="${dictionaryTypes}" var="dictionaryType">
+					  <%--取出阶段的类型--%>
+					  <c:if test="${dictionaryType.code eq 'stage'}">
+						  <%--取出阶段类型对应的value--%>
+						  <c:forEach items="${dictionaryType.dictionaryValues}" var="dictionaryValue">
+							  <option value="${dictionaryValue.value}">${dictionaryValue.text}</option>
+						  </c:forEach>
+					  </c:if>
+				  </c:forEach>
 			  </select>
 			</div>
 		</div>
@@ -175,14 +174,20 @@
 			<label for="create-transactionType" class="col-sm-2 control-label">类型</label>
 			<div class="col-sm-10" style="width: 300px;">
 				<select class="form-control" id="create-transactionType">
-				  <option></option>
-				  <option>已有业务</option>
-				  <option>新业务</option>
+					<c:forEach items="${dictionaryTypes}" var="dictionaryType">
+						<%--取出阶段的类型--%>
+						<c:if test="${dictionaryType.code eq 'transactionType'}">
+							<%--取出阶段类型对应的value--%>
+							<c:forEach items="${dictionaryType.dictionaryValues}" var="dictionaryValue">
+								<option value="${dictionaryValue.value}">${dictionaryValue.text}</option>
+							</c:forEach>
+						</c:if>
+					</c:forEach>
 				</select>
 			</div>
 			<label for="create-possibility" class="col-sm-2 control-label">可能性</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-possibility">
+				<input type="text" class="form-control" id="create-possibility" value="10">
 			</div>
 		</div>
 		
@@ -190,21 +195,15 @@
 			<label for="create-clueSource" class="col-sm-2 control-label">来源</label>
 			<div class="col-sm-10" style="width: 300px;">
 				<select class="form-control" id="create-clueSource">
-				  <option></option>
-				  <option>广告</option>
-				  <option>推销电话</option>
-				  <option>员工介绍</option>
-				  <option>外部介绍</option>
-				  <option>在线商场</option>
-				  <option>合作伙伴</option>
-				  <option>公开媒介</option>
-				  <option>销售邮件</option>
-				  <option>合作伙伴研讨会</option>
-				  <option>内部研讨会</option>
-				  <option>交易会</option>
-				  <option>web下载</option>
-				  <option>web调研</option>
-				  <option>聊天</option>
+					<c:forEach items="${dictionaryTypes}" var="dictionaryType">
+						<%--取出阶段的类型--%>
+						<c:if test="${dictionaryType.code eq 'source'}">
+							<%--取出阶段类型对应的value--%>
+							<c:forEach items="${dictionaryType.dictionaryValues}" var="dictionaryValue">
+								<option value="${dictionaryValue.value}">${dictionaryValue.text}</option>
+							</c:forEach>
+						</c:if>
+					</c:forEach>
 				</select>
 			</div>
 			<label for="create-activitySrc" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findMarketActivity"><span class="glyphicon glyphicon-search"></span></a></label>
@@ -244,3 +243,59 @@
 	</form>
 </body>
 </html>
+<script>
+	//异步查询所有所有者信息
+	$.ajax({
+		url : '/crm/workbench/activity/queryAllUsers',
+		type : 'get',
+		dataType : 'json',
+		success : function(data){
+			for(var i = 0 ; i < data.length;i++){
+				$('#create-transactionOwner')
+						.append("<option value="+data[i].id+">"+data[i].name+"</option>");
+			}
+		}
+	});
+	//预计成交日期插件
+	$("#create-expectedClosingDate").datetimepicker({
+		language:  "zh-CN",
+		format: "yyyy-mm-dd",//显示格式
+		minView: "month",//设置只显示到月份
+		initialDate: new Date(),//初始化当前日期
+		autoclose: true,//选中自动关闭
+		todayBtn: true, //显示今日按钮
+		clearBtn : true,
+		pickerPosition: "bottom-left"
+	});
+
+	//自动补全功能
+	$("#create-accountName").typeahead({
+		source: function (customerName, process) {
+			$.post(
+					"/crm/workbench/transaction/queryCustomerName",
+					{ "customerName" : customerName },
+					function (data) {
+						//alert(data);
+						process(data);
+					},
+					"json"
+			);
+		},
+		//输入内容后延迟多长时间弹出提示内容
+		delay: 500
+	});
+	//选中阶段，向后台发送异步请求查询阶段对应的可能性
+	$('#create-transactionStage').change(function () {
+		$.ajax({
+			url : '/crm/workbench/transaction/queryPossibilityByStage',
+			data : {
+				"stage" : $(this).val()
+			},
+			type : 'get',
+			dataType : 'text',
+			success : function(data){
+				$('#create-possibility').val(data);
+			}
+		});
+	});
+</script>
