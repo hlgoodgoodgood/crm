@@ -5,6 +5,7 @@ import tk.mybatis.mapper.code.Style;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.List;
 
 /**
  * @ProjectName: crm
@@ -40,6 +41,30 @@ public class Transaction {
     private String contactSummary;
     private String nextContactTime;
 
+    private List<String> possibility;
+
+    //交易备注
+    private List<TransactionRemark> transactionRemarks;
+
+    //交易历史信息
+    private List<TransactionHistory> transactionHistories;
+
+    public List<TransactionHistory> getTransactionHistories() {
+        return transactionHistories;
+    }
+
+    public void setTransactionHistories(List<TransactionHistory> transactionHistories) {
+        this.transactionHistories = transactionHistories;
+    }
+
+    public List<TransactionRemark> getTransactionRemarks() {
+        return transactionRemarks;
+    }
+
+    public void setTransactionRemarks(List<TransactionRemark> transactionRemarks) {
+        this.transactionRemarks = transactionRemarks;
+    }
+
     @Override
     public String toString() {
         return "Transaction{" +
@@ -61,7 +86,18 @@ public class Transaction {
                 ", description='" + description + '\'' +
                 ", contactSummary='" + contactSummary + '\'' +
                 ", nextContactTime='" + nextContactTime + '\'' +
+                ", possibility=" + possibility +
+                ", transactionRemarks=" + transactionRemarks +
+                ", transactionHistories=" + transactionHistories +
                 '}';
+    }
+
+    public List<String> getPossibility() {
+        return possibility;
+    }
+
+    public void setPossibility(List<String> possibility) {
+        this.possibility = possibility;
     }
 
     public String getId() {

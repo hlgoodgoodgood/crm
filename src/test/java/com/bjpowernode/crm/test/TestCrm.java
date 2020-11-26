@@ -11,10 +11,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @ProjectName: crm
@@ -93,5 +90,15 @@ public class TestCrm {
         Iterable<String> iterator = ids;
         System.out.println(iterator);
 
+    }
+
+    //Map
+    @Test
+    public void test07(){
+        Map<String,String> names = new TreeMap<>();
+        names.put("a","张三");
+        names.put("name","李四");
+        names.put("def","王五");
+        System.out.println(names);
     }
 }

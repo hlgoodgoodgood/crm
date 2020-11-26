@@ -46,14 +46,13 @@ public class CrmCache {
         //获取所有key
         Enumeration<String> keys = resourceBundle.getKeys();
         //把所有阶段和可能性的数据放在map中
-        Map<String,String> map = new HashMap<>();
+        Map<String,String> map = new TreeMap<>();
         while (keys.hasMoreElements()){
             String key = keys.nextElement();//取出本次循环的数据
             String value = resourceBundle.getString(key);
             map.put(key,value);
         }
         //将map放在servletContext中
-
         servletContext.setAttribute("stage2PossibilityMap",map);
     }
 

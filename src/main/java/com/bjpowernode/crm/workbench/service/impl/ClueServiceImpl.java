@@ -406,7 +406,10 @@ public class ClueServiceImpl implements ClueService {
         }
 
         //删除线索
-        clueMapper.deleteByPrimaryKey(clue.getId());
+        count = clueMapper.deleteByPrimaryKey(clue.getId());
+        if(count == 0){
+            throw new CrmException(CrmExceptionEnum.CLUE_CONVERT);
+        }
     }
 
     //线索转换发生交易查询当前线索下的所有市场活动

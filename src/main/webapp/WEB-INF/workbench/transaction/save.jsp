@@ -119,44 +119,47 @@
 	<div style="position:  relative; left: 30px;">
 		<h3>创建交易</h3>
 	  	<div style="position: relative; top: -40px; left: 70%;">
-			<button type="button" class="btn btn-primary">保存</button>
+			<button type="button" id="saveTransactionBtn" class="btn btn-primary">保存</button>
 			<button type="button" class="btn btn-default">取消</button>
 		</div>
 		<hr style="position: relative; top: -40px;">
 	</div>
-	<form class="form-horizontal" role="form" style="position: relative; top: -30px;">
+	<form class="form-horizontal" action="/crm/workbench/transaction/saveTransaction" method="post" id="saveTransactionForm" role="form" style="position: relative; top: -30px;">
 		<div class="form-group">
 			<label for="create-transactionOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="create-transactionOwner">
+				<select class="form-control" name="owner" id="create-transactionOwner">
 
 				</select>
 			</div>
 			<label for="create-amountOfMoney" class="col-sm-2 control-label">金额</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-amountOfMoney">
+				<input type="text" name="money" class="form-control" id="create-amountOfMoney">
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-transactionName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-transactionName">
+				<input type="text" name="name" class="form-control" id="create-transactionName">
 			</div>
 			<label for="create-expectedClosingDate" class="col-sm-2 control-label">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-expectedClosingDate">
+				<input type="text" name="expectedDate" class="form-control" id="create-expectedClosingDate">
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-accountName" class="col-sm-2 control-label">客户名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-accountName" placeholder="支持自动补全，输入客户不存在则新建">
+			<%--用户输入名字--%>
+				<input type="text" name="company" class="form-control" id="create-accountName" placeholder="支持自动补全，输入客户不存在则新建">
+				<%--客户主键--%>
+				<input type="hidden" id="customerId" name="customerId"  />
 			</div>
 			<label for="create-transactionStage" class="col-sm-2 control-label">阶段<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-			  <select class="form-control" id="create-transactionStage">
+			  <select name="stage" class="form-control" id="create-transactionStage">
 				  <c:forEach items="${dictionaryTypes}" var="dictionaryType">
 					  <%--取出阶段的类型--%>
 					  <c:if test="${dictionaryType.code eq 'stage'}">
@@ -173,7 +176,7 @@
 		<div class="form-group">
 			<label for="create-transactionType" class="col-sm-2 control-label">类型</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="create-transactionType">
+				<select name="type" class="form-control" id="create-transactionType">
 					<c:forEach items="${dictionaryTypes}" var="dictionaryType">
 						<%--取出阶段的类型--%>
 						<c:if test="${dictionaryType.code eq 'transactionType'}">
@@ -187,14 +190,14 @@
 			</div>
 			<label for="create-possibility" class="col-sm-2 control-label">可能性</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-possibility" value="10">
+				<input type="text" name="possibility" class="form-control" id="create-possibility" value="10">
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-clueSource" class="col-sm-2 control-label">来源</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="create-clueSource">
+				<select name="source" class="form-control" id="create-clueSource">
 					<c:forEach items="${dictionaryTypes}" var="dictionaryType">
 						<%--取出阶段的类型--%>
 						<c:if test="${dictionaryType.code eq 'source'}">
@@ -208,6 +211,7 @@
 			</div>
 			<label for="create-activitySrc" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findMarketActivity"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
+				<input type="hidden" name="activityId" value="b20bdc46774b4bdab3439af7f64b3d67">
 				<input type="text" class="form-control" id="create-activitySrc">
 			</div>
 		</div>
@@ -215,28 +219,29 @@
 		<div class="form-group">
 			<label for="create-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findContacts"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-contactsName">
+				<input type="hidden" name="contactsId" value="76b61e3406524ceaa5653e90c27b3d59" />
+				<input type="text" class="form-control" value="马化腾" id="create-contactsName">
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-describe" class="col-sm-2 control-label">描述</label>
 			<div class="col-sm-10" style="width: 70%;">
-				<textarea class="form-control" rows="3" id="create-describe"></textarea>
+				<textarea class="form-control" name="description" rows="3" id="create-describe"></textarea>
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-contactSummary" class="col-sm-2 control-label">联系纪要</label>
 			<div class="col-sm-10" style="width: 70%;">
-				<textarea class="form-control" rows="3" id="create-contactSummary"></textarea>
+				<textarea class="form-control" name="contactSummary" rows="3" id="create-contactSummary"></textarea>
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-nextContactTime">
+				<input type="text" class="form-control" name="nextContactTime" id="create-nextContactTime">
 			</div>
 		</div>
 		
@@ -268,6 +273,17 @@
 		pickerPosition: "bottom-left"
 	});
 
+	$("#create-nextContactTime").datetimepicker({
+		language:  "zh-CN",
+		format: "yyyy-mm-dd",//显示格式
+		minView: "month",//设置只显示到月份
+		initialDate: new Date(),//初始化当前日期
+		autoclose: true,//选中自动关闭
+		todayBtn: true, //显示今日按钮
+		clearBtn : true,
+		pickerPosition: "bottom-left"
+	});
+
 	//自动补全功能
 	$("#create-accountName").typeahead({
 		source: function (customerName, process) {
@@ -277,6 +293,7 @@
 					function (data) {
 						//alert(data);
 						process(data);
+						//获取用户选中的内容
 					},
 					"json"
 			);
@@ -295,6 +312,27 @@
 			dataType : 'text',
 			success : function(data){
 				$('#create-possibility').val(data);
+			}
+		});
+	});
+	
+	//点击保存按钮，保存交易
+	$('#saveTransactionBtn').click(function () {
+		$('#saveTransactionForm').submit();
+	});
+
+	//客户名称
+	$('#create-accountName').change(function () {
+		// var $this = $(this);
+		$.ajax({
+			url : '/crm/workbench/transaction/queryCustomerByName',
+			data : {
+				name : $(this).val()
+			},
+			type : 'get',
+			dataType : 'json',
+			success : function(data){
+				$('#customerId').val(data);
 			}
 		});
 	});

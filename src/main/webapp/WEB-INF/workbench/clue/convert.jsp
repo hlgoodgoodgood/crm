@@ -149,6 +149,7 @@
 
 	}
 
+	//查询当前线索下的市场活动
 	$('#activityName').keypress(function (event) {
 		//按下回车键发送异步请求
 		if(event.keyCode == 13){

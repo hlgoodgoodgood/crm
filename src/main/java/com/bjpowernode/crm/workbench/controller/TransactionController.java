@@ -1,8 +1,12 @@
 package com.bjpowernode.crm.workbench.controller;
 
+import com.bjpowernode.crm.base.constants.CrmConstants;
+import com.bjpowernode.crm.settings.bean.User;
+import com.bjpowernode.crm.workbench.bean.Transaction;
 import com.bjpowernode.crm.workbench.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -42,4 +46,44 @@ public class TransactionController {
                 (Map<String, String>) session.getServletContext().getAttribute("stage2PossibilityMap");
         return stage2PossibilityMap.get(stage);
     }
+
+    //保存交易
+    @RequestMapping("/workbench/transaction/saveTransaction")
+    public String saveTransaction(Transaction transaction,String company,HttpSession session){
+        User user = (User) session.getAttribute(CrmConstants.LOGIN_USER);
+        transaction.setCreateBy(user.getName());
+        transactionService.saveTransaction(transaction,company);
+        return "/transaction/index";
+    }
+
+    //异步查询客户的主键
+    @RequestMapping("/workbench/transaction/queryCustomerByName")
+    @ResponseBody
+    public String queryCustomerByName(String name){
+        String customerId = transactionService.queryCustomerByName(name);
+        return customerId;
+    }
+
+    //从交易列表页面点击具体交易，查询出对应交易信息，跳转到交易详情页面
+    @RequestMapping("/workbench/transaction/queryTransactionById")
+    public String queryTransactionById(String id, HttpSession session, Model model){
+        Map<String,String> map =
+                (Map<String, String>) session.getServletContext().getAttribute("stage2PossibilityMap");
+        Transaction transaction = transactionService.queryTransactionById(id,map);
+        model.addAttribute("transaction",transaction);
+        return "/transaction/detail";
+    }
+
+
+    //返回交易阶段图标
+    @RequestMapping("/workbench/transaction/stageList")
+    @ResponseBody
+    public List<Map<String,String>> stageList(String tranId,HttpSession session){
+        Map<String,String> map =
+                (Map<String, String>) session.getServletContext().getAttribute("stage2PossibilityMap");
+        List<Map<String,String>> stageList = transactionService.stageList(tranId,map);
+        return stageList;
+    }
+
+
 }
