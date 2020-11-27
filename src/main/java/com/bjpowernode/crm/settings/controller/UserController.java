@@ -38,7 +38,7 @@ public class UserController {
         return userService.queryUsers();
     }
 
-    @PostMapping("/settings/user/login")
+    @RequestMapping("/settings/user/login")
     public String login(User user, Model model, HttpSession session, HttpServletRequest request){
         //获取用户登录的ip
         String ip = request.getRemoteAddr();

@@ -75,15 +75,15 @@ public class TransactionController {
     }
 
 
-    //返回交易阶段图标
+    //返回交易阶段图标,同时支持交易详情点击交易图标，改变交易阶段的状态
     @RequestMapping("/workbench/transaction/stageList")
     @ResponseBody
-    public List<Map<String,String>> stageList(String tranId,HttpSession session){
+    public List<Map<String, ? extends Object>> stageList(Integer index,String tranId,HttpSession session){
         Map<String,String> map =
                 (Map<String, String>) session.getServletContext().getAttribute("stage2PossibilityMap");
-        List<Map<String,String>> stageList = transactionService.stageList(tranId,map);
+        User user = (User) session.getAttribute(CrmConstants.LOGIN_USER);
+        List<Map<String, ? extends Object>> stageList = transactionService.stageList(user.getName(),index,tranId,map);
         return stageList;
     }
-
 
 }

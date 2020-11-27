@@ -47,13 +47,15 @@
 		<property name="defaultEncoding" value="UTF-8"/>
 	</bean>-->
 
-	<!--注册登录拦截器-->
-	<!--<mvc:interceptors>
+	<!--注册:登录拦截器-->
+	<mvc:interceptors>
 		<mvc:interceptor>
-			&lt;!&ndash;path拦截的路径，不是目录，根路径拦截失效&ndash;&gt;
-			<mvc:mapping path="/admin/*"/>
-			<bean class="com.bjpowernode.ssm.blog.interceptor.LoginInterceptor" />
+			<!--path拦截的路径，不是目录，根路径拦截失效[/项目名不需要写]-->
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/jquery/**" />
+			<mvc:exclude-mapping path="/image/**" />
+			<bean class="com.bjpowernode.crm.settings.interceptor.CrmLoginInterceptor" />
 		</mvc:interceptor>
 
-	</mvc:interceptors>-->
+	</mvc:interceptors>
 </beans>

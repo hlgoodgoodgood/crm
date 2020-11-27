@@ -14,5 +14,6 @@ public interface TransactionService {
 
     Transaction queryTransactionById(String id, Map<String, String> stage2PossibilityMap);
 
-    List<Map<String, String>> stageList(String tranId,Map<String,String> map);
+    List<Map<String, ? extends Object>> stageList(String name,Integer index,String tranId,Map<String,String> map);
+
 }
