@@ -20,6 +20,40 @@
 
   <dependencies>
 
+    <!--难得糊涂工具类-->
+    <dependency>
+      <groupId>cn.hutool</groupId>
+      <artifactId>hutool-all</artifactId>
+      <version>5.5.1</version>
+    </dependency>
+
+    <!--POI:java操作Excel-->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>4.1.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>easyexcel</artifactId>
+      <version>2.2.6</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>poi-ooxml</artifactId>
+          <groupId>org.apache.poi</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>poi</artifactId>
+          <groupId>org.apache.poi</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>poi-ooxml-schemas</artifactId>
+          <groupId>org.apache.poi</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
     <dependency>
       <groupId>javax.annotation</groupId>
       <artifactId>javax.annotation-api</artifactId>

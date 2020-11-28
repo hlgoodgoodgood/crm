@@ -3,16 +3,26 @@ package com.bjpowernode.crm.workbench.service.impl;
 import com.bjpowernode.crm.base.constants.CrmExceptionEnum;
 import com.bjpowernode.crm.base.exception.CrmException;
 import com.bjpowernode.crm.base.util.DateTimeUtil;
+import com.bjpowernode.crm.base.util.ExcelUtil;
 import com.bjpowernode.crm.base.util.UUIDUtil;
 import com.bjpowernode.crm.settings.bean.User;
 import com.bjpowernode.crm.settings.mapper.UserMapper;
 import com.bjpowernode.crm.workbench.bean.*;
 import com.bjpowernode.crm.workbench.mapper.*;
 import com.bjpowernode.crm.workbench.service.TransactionService;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -354,6 +364,64 @@ public class TransactionServiceImpl implements TransactionService {
         }
         stages.add(transactionHistoryMap);
         return stages;
+    }
+
+    @Override
+    public TransactionEchartsResultVo queryTransactionEcharts() {
+        List<Map<String, String>> stringListMap = transactionMapper.queryTransactionEcharts();
+        Map<String,List<Map<String,String>>> map = new HashMap<>();
+        //图表中的series的data
+        map.put("transactions",stringListMap);
+        //图表中legend的data
+        List<String> names = new ArrayList<>();
+        for(Map<String,String> m : stringListMap){
+            String name = m.get("name");
+            names.add(name);
+        }
+
+        TransactionEchartsResultVo transactionEchartsResultVo = new TransactionEchartsResultVo();
+        transactionEchartsResultVo.setDataMap(map);
+        transactionEchartsResultVo.setDataList(names);
+        return transactionEchartsResultVo;
+    }
+
+    @Override
+    public void export(String realPath) {
+        List<Transaction> transactions = transactionMapper.selectAll();
+
+        //交易的字段名称
+        String[] titles = {"所有者","金额","名称","预计成交日期","客户",
+                "阶段","类型","来源","市场活动","联系人","创建人","创建时间"
+                ,"修改人","修改时间","描述","联系纪要","下次联系时间"};
+
+        List<List<String>> data = new ArrayList<>();
+        for(int i = 0 ; i < transactions.size(); i++){
+            List<String> perRowData = new ArrayList<>();
+            Transaction transaction = transactions.get(i);
+            for(int j = 0 ; j < titles.length; j++){
+                perRowData.add(transaction.getOwner());
+                perRowData.add(transaction.getMoney());
+                perRowData.add(transaction.getName());
+                perRowData.add(transaction.getExpectedDate());
+                perRowData.add(transaction.getCustomerId());
+                perRowData.add(transaction.getStage());
+                perRowData.add(transaction.getType());
+                perRowData.add(transaction.getSource());
+                perRowData.add(transaction.getActivityId());
+                perRowData.add(transaction.getContactsId());
+                perRowData.add(transaction.getCreateBy());
+                perRowData.add(transaction.getCreateTime());
+                perRowData.add(transaction.getEditBy());
+                perRowData.add(transaction.getEditTime());
+                perRowData.add(transaction.getDescription());
+                perRowData.add(transaction.getContactSummary());
+                perRowData.add(transaction.getNextContactTime());
+            }
+            data.add(perRowData);
+        }
+
+        String path = realPath + File.separator + "交易.xlsx";
+        ExcelUtil.writeToExcel(path,data,titles);
     }
 
 }

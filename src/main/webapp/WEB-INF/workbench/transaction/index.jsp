@@ -131,6 +131,7 @@
 				  <button type="button" class="btn btn-primary" onclick="window.location.href='save.html';"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" onclick="window.location.href='edit.html';"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <a type="button" href="/crm/workbench/transaction/export" class="btn btn-success"><span class="glyphicon glyphicon-minus"></span> 导出Excel</a>
 				</div>
 				
 				

@@ -43,6 +43,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public List<Map<String, String>> queryAllActivity( ActivityQueryVo queryVo) {
+
         return activityMapper.queryAllActivity(queryVo);
     }
 

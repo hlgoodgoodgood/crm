@@ -3,6 +3,7 @@ package com.bjpowernode.crm.workbench.controller;
 import com.bjpowernode.crm.base.constants.CrmConstants;
 import com.bjpowernode.crm.settings.bean.User;
 import com.bjpowernode.crm.workbench.bean.Transaction;
+import com.bjpowernode.crm.workbench.bean.TransactionEchartsResultVo;
 import com.bjpowernode.crm.workbench.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,7 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -86,4 +89,22 @@ public class TransactionController {
         return stageList;
     }
 
+    //异步查询统计交易图表信息
+    @RequestMapping("/workbench/chart/transaction/queryTransactionEcharts")
+    @ResponseBody
+    public TransactionEchartsResultVo queryTransactionEcharts(){
+        return transactionService.queryTransactionEcharts();
+    }
+
+    //将交易列表信息导出Excel
+    @RequestMapping("/workbench/transaction/export")
+    public String export(HttpSession session){
+        String realPath = session.getServletContext().getRealPath("/excel");
+        File file = new File(realPath);
+        if(!file.exists()){
+            file.mkdirs();
+        }
+        transactionService.export(realPath);
+        return "/transaction/index";
+    }
 }

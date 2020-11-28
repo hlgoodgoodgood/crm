@@ -54,6 +54,7 @@
 			<mvc:mapping path="/**"/>
 			<mvc:exclude-mapping path="/jquery/**" />
 			<mvc:exclude-mapping path="/image/**" />
+			<mvc:exclude-mapping path="/ECharts/**" />
 			<bean class="com.bjpowernode.crm.settings.interceptor.CrmLoginInterceptor" />
 		</mvc:interceptor>
 

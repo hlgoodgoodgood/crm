@@ -1,7 +1,9 @@
 package com.bjpowernode.crm.workbench.service;
 
 import com.bjpowernode.crm.workbench.bean.Transaction;
+import com.bjpowernode.crm.workbench.bean.TransactionEchartsResultVo;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -16,4 +18,7 @@ public interface TransactionService {
 
     List<Map<String, ? extends Object>> stageList(String name,Integer index,String tranId,Map<String,String> map);
 
+    TransactionEchartsResultVo queryTransactionEcharts();
+
+    void export(String realPath);
 }
