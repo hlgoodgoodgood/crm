@@ -23,7 +23,7 @@ import java.util.*;
 public class CrmCache {
 
 
-   /* @Autowired
+    @Autowired
     private DictionaryService dictionaryService;
 
     @Autowired
@@ -55,7 +55,7 @@ public class CrmCache {
         //将map放在servletContext中
         servletContext.setAttribute("stage2PossibilityMap",map);
     }
-*/
+
 
 
 }
