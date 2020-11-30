@@ -57,6 +57,5 @@
 			<mvc:exclude-mapping path="/ECharts/**" />
 			<bean class="com.bjpowernode.crm.settings.interceptor.CrmLoginInterceptor" />
 		</mvc:interceptor>
-
 	</mvc:interceptors>
 </beans>

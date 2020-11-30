@@ -405,24 +405,6 @@
 
 
                 var transactionHistory = data[data.length -1]. transactionHistory;
-                //动态修改当前交易对应的交易历史信息
-                /*$('#transactionHistoryBody').html("");
-                var transactionHistoryContent = "";
-                for(var i = 0; i < transactionHistoryList.length; i++){
-                    //每一个交易历史
-
-                    var transactionHistory = transactionHistoryList[i];
-                    transactionHistoryContent += "<tr>\n" +
-                        "\t\t\t\t\t\t\t\t<td>"+transactionHistory.stage+"</td>\n" +
-                        "\t\t\t\t\t\t\t\t<td>"+transactionHistory.money+"</td>\n" +
-
-                        "\t\t\t\t\t\t\t\t<td></td>\n" +
-                        "\t\t\t\t\t\t\t\t<td>"+transactionHistory.expectedDate+"</td>\n" +
-                        "\t\t\t\t\t\t\t\t<td>"+transactionHistory.createTime+"</td>\n" +
-                        "\t\t\t\t\t\t\t\t<td>"+transactionHistory.createBy+"</td>\n" +
-                        "\t\t\t\t\t\t\t</tr>"
-                }*/
-
                 $('#transactionHistoryBody').append("<tr>\n" +
                     "\t\t\t\t\t\t\t\t<td>"+transactionHistory.stage+"</td>\n" +
                     "\t\t\t\t\t\t\t\t<td>"+transactionHistory.money+"</td>\n" +

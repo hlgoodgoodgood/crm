@@ -7,6 +7,12 @@
 <script type="text/javascript" src="/crm/jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 </head>
 <body>
+<script>
+	if(window.top!=window){
+		window.top.location=window.location;
+	}
+
+</script>
 	<div style="position: absolute; top: 0px; left: 0px; width: 60%;">
 		<img src="/crm/image/IMG_7114.JPG" alt="这个首页图片" title="我是图片" style="width: 100%; position: relative; top: 50px;">
 	</div>
