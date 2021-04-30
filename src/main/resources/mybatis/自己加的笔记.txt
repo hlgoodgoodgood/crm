@@ -1,0 +1,1 @@
+Stage2Possibility.properties 是可能性文件
