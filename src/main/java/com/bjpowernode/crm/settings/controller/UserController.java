@@ -63,7 +63,7 @@ public class UserController {
     public String loginOut(HttpSession session){
         //从session移除用户
         session.removeAttribute(CrmConstants.LOGIN_USER);
-        return "redirect:/login.jsp";
+        return "redirect:/login.jsp";//spring走默认是请求转发而不是重定向
     }
 
 }

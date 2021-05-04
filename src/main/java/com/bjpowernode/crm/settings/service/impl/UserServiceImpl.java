@@ -39,10 +39,11 @@ public class UserServiceImpl implements UserService {
         String loginPass = MD5Util.getMD5(user.getLoginPwd());
         user.setLoginPwd(loginPass);
 
-        //获取当前用户登录的ip地址，不取出就会当做条件参与查询
-        String ip = user.getAllowIps();
+        //获取当前用户登录的ip地址，不取出就会当做条件参与查询 * 因为selectOne会使用对象中所有已存在的属性
 
+        String ip = user.getAllowIps();
         user.setAllowIps(null);
+
         user = userMapper.selectOne(user);
         //用户名或者密码错误
         if(user == null){
@@ -65,7 +66,7 @@ public class UserServiceImpl implements UserService {
             if(user.getAllowIps() != null){
                 if(!user.getAllowIps().contains(ip)){
                     //不允许登录的ip地址
-                    throw new CrmException(CrmExceptionEnum.LOGIN_ACCOUNT_IP);
+                    throw new CrmException(CrmExceptionEnum.LOGIN_ACCOUNT_IP_FORBID);
                 }
             }
         }

@@ -17,12 +17,12 @@ import com.bjpowernode.crm.base.constants.CrmExceptionEnum;
  */
 public class CrmException extends RuntimeException {
 
-
+//*封装异常信息的枚举对象 包含业务码和错误提示信息
     private CrmExceptionEnum exceptionEnum;
 
     public CrmException(CrmExceptionEnum exceptionEnum) {
         super(exceptionEnum.getMess());//将异常信息放在堆栈信息中
-        this.exceptionEnum = exceptionEnum;
+        this.exceptionEnum = exceptionEnum;//异常类属性的实例化
     }
 
     public CrmExceptionEnum getExceptionEnum() {

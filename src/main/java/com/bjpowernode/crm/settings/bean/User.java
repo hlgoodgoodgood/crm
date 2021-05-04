@@ -32,7 +32,7 @@ public class User {
     private String expireTime;//失效时间:注册的时候指定使用期限 yyyy-MM-dd hh:mm:ss 失效时间为空的时候表示永不失效
     private String lockState;//账户是否被锁定 0时表示锁定，为1时表示启用
     private String deptno;//所在部门
-    private String allowIps;//允许登录的ip地址 IP为空时表示IP地址永不受限
+    private String allowIps;//允许登录的ip地址 IP为空时表示IP地址永不受限（一般会有设置）
     private String createTime;//创建时间 yyyy-MM-dd hh:mm:ss
     private String createBy;//创建者    yyyy-MM-dd hh:mm:ss
     private String editTime;//编辑时间
